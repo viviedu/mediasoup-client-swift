@@ -1,7 +1,7 @@
 import UIKit
 import Mediasoup
 import AVFoundation
-import WebRTC
+import LiveKitWebRTC
 
 
 final class ViewController: UIViewController {

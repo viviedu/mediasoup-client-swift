@@ -10,14 +10,13 @@ let webrtcChecksum = "6fd8501746d1de14cc2b2aa86d1ea4e081d8ad50ad190c99fb12fdbfdf
 let package = Package(
 	name: "Mediasoup-Client-Swift",
 	platforms: [
-		.iOS(.v14)
+		.tvOS(.v14)
 	],
 	products: [
 		.library(
 			name: "Mediasoup",
 			targets: [
-				"Mediasoup",
-				"WebRTC"
+				"Mediasoup"
 			]
 		)
 	],
@@ -28,11 +27,6 @@ let package = Package(
 			name: "Mediasoup",
 			url: "https://github.com/VLprojects/mediasoup-client-swift/releases/download/\(version)/Mediasoup.xcframework.zip",
 			checksum: mediasoupChecksum
-		),
-		.binaryTarget(
-			name: "WebRTC",
-			url: "https://github.com/VLprojects/mediasoup-client-swift/releases/download/\(version)/WebRTC.xcframework.zip",
-			checksum: webrtcChecksum
 		)
 	]
 )

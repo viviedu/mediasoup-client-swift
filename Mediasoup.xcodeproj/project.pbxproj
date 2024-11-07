@@ -73,7 +73,6 @@
 		FFC5AC782825170500C92A96 /* ConsumerWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = FFC5AC772825170500C92A96 /* ConsumerWrapper.mm */; };
 		FFCD791827F419E800D26B4C /* mediasoupclient.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFCD791727F419E800D26B4C /* mediasoupclient.xcframework */; };
 		FFCD791D27F41A0900D26B4C /* sdptransform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFCD791B27F41A0900D26B4C /* sdptransform.xcframework */; };
-		FFCD791F27F41A0900D26B4C /* WebRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFCD791C27F41A0900D26B4C /* WebRTC.xcframework */; };
 		FFF004F92B592424007BA500 /* RTPParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF004F82B592424007BA500 /* RTPParameters.swift */; };
 		FFF004FB2B5986F6007BA500 /* ScalabilityMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF004FA2B5986F6007BA500 /* ScalabilityMode.swift */; };
 		FFF004FF2B598D59007BA500 /* ScalabilityMode.h in Headers */ = {isa = PBXBuildFile; fileRef = FFF004FE2B59881C007BA500 /* ScalabilityMode.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -152,7 +151,6 @@
 		FFC5AC7A2825274F00C92A96 /* ConsumerListenerAdapterDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConsumerListenerAdapterDelegate.h; sourceTree = "<group>"; };
 		FFCD791727F419E800D26B4C /* mediasoupclient.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = mediasoupclient.xcframework; path = bin/mediasoupclient.xcframework; sourceTree = "<group>"; };
 		FFCD791B27F41A0900D26B4C /* sdptransform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = sdptransform.xcframework; path = bin/sdptransform.xcframework; sourceTree = "<group>"; };
-		FFCD791C27F41A0900D26B4C /* WebRTC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = WebRTC.xcframework; path = bin/WebRTC.xcframework; sourceTree = "<group>"; };
 		FFF004F82B592424007BA500 /* RTPParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTPParameters.swift; sourceTree = "<group>"; };
 		FFF004FA2B5986F6007BA500 /* ScalabilityMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalabilityMode.swift; sourceTree = "<group>"; };
 		FFF004FC2B598806007BA500 /* ScalabilityMode.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ScalabilityMode.mm; sourceTree = "<group>"; };
@@ -174,7 +172,6 @@
 			files = (
 				FFCD791D27F41A0900D26B4C /* sdptransform.xcframework in Frameworks */,
 				FFCD791827F419E800D26B4C /* mediasoupclient.xcframework in Frameworks */,
-				FFCD791F27F41A0900D26B4C /* WebRTC.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,7 +336,6 @@
 			isa = PBXGroup;
 			children = (
 				FFCD791B27F41A0900D26B4C /* sdptransform.xcframework */,
-				FFCD791C27F41A0900D26B4C /* WebRTC.xcframework */,
 				FFCD791727F419E800D26B4C /* mediasoupclient.xcframework */,
 			);
 			name = Frameworks;
@@ -640,12 +636,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,3";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -737,11 +733,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,3";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

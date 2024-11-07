@@ -1,6 +1,6 @@
 import Foundation
 import Mediasoup_Private
-import WebRTC
+import LiveKitWebRTC
 
 
 public class DataConsumer {

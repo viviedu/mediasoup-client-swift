@@ -6,10 +6,10 @@ Pod::Spec.new do |spec|
 	spec.author = {
 		"Alexander Gorbunov" => "gorbunov.a@vlprojects.pro"
 	}
-	
+
 	spec.name = "Mediasoup-Client-Swift"
 	spec.version = "0.8.1"
-	spec.platform = :ios, "14.0"
+	spec.platform = :tvos, "17.0"
 	spec.module_name = "Mediasoup"
 	spec.module_map = "Mediasoup/Mediasoup.modulemap"
 
@@ -26,6 +26,5 @@ Pod::Spec.new do |spec|
 		"CoreVideo"
 
 	spec.vendored_frameworks =
-		"bin/Mediasoup.xcframework",
-		"bin/WebRTC.xcframework"
+		"bin/Mediasoup.xcframework"
 end

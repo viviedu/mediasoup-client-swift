@@ -9,7 +9,7 @@ Swift wrapper for libmediasoupclient with iOS support
 
 1. **First-class Swift support**
 
-   * No crashes caused by unhandled C++ exceptions. Each throwing C++ function is properly wrapped and throws a catchable `Swift.Error`.  
+   * No crashes caused by unhandled C++ exceptions. Each throwing C++ function is properly wrapped and throws a catchable `Swift.Error`.
 
    * No implicitly-unwrapped optionals in public interface. All unsafe operations are hidden inside wrapper.
 
@@ -53,8 +53,8 @@ Swift wrapper for libmediasoupclient with iOS support
    import UIKit
    import Mediasoup
    import AVFoundation
-   import WebRTC
-   
+   import LiveKitWebRTC
+
    final class MediasoupClient {
        private let signaling: Signaling
        private let pcFactory = RTCPeerConnectionFactory()
@@ -63,23 +63,23 @@ Swift wrapper for libmediasoupclient with iOS support
        private var device: Device?
        private var sendTransport: SendTransport?
        private var producer: Producer?
-   
+
        init(signaling: Signaling) {
            self.signaling = signaling
        }
-   
+
        func setupDevices() {
            guard AVCaptureDevice.authorizationStatus(for: .audio) == .authorized else {
                AVCaptureDevice.requestAccess(for: .audio) { _ in
                }
                return
            }
-   
+
            mediaStream = pcFactory.mediaStream(withStreamId: Constants.mediaStreamId)
            let audioTrack = pcFactory.audioTrack(withTrackId: Constants.audioTrackId)
            mediaStream?.addAudioTrack(audioTrack)
            self.audioTrack = audioTrack
-   
+
            let device = Device()
            self.device = device
            do {
@@ -94,7 +94,7 @@ Swift wrapper for libmediasoupclient with iOS support
                )
                sendTransport.delegate = self
                self.sendTransport = sendTransport
-   
+
                let producer = try sendTransport.createProducer(
                    for: audioTrack,
                    encodings: nil,
@@ -111,26 +111,26 @@ Swift wrapper for libmediasoupclient with iOS support
            }
        }
    }
-   
+
    extension MediasoupClient: SendTransportDelegate {
        func onProduce(transport: Transport, kind: MediaKind, rtpParameters: String, appData: String, callback: @escaping (String?) -> Void) {
            // Handle state changes.
        }
-   
+
        func onProduceData(transport: Transport, sctpParameters: String, label: String, protocol dataProtocol: String, appData: String, callback: @escaping (String?) -> Void) {
            // Handle state changes.
        }
-   
+
        func onConnect(transport: Transport, dtlsParameters: String) {
            // Handle state changes.
        }
-   
+
        func onConnectionStateChange(transport: Transport, connectionState: TransportConnectionState) {
-           
+
            // Handle state changes.
        }
    }
-   
+
    extension MediasoupClient: ProducerDelegate {
        func onTransportClose(in producer: Producer) {
            // Handle state changes.
@@ -140,11 +140,11 @@ Swift wrapper for libmediasoupclient with iOS support
 
 ## Dependencies
 
-Mediasoup-Client-Swift has almost no logic, it's only a convenient wrapper for other nice libraries. 
+Mediasoup-Client-Swift has almost no logic, it's only a convenient wrapper for other nice libraries.
 
 * [WebRTC (version m120 with patches applied locally)](https://groups.google.com/g/discuss-webrtc/c/ws0_MYHIBOw)
 
-* [libmediasoupclient (version 3.4.1 patched fork)](https://github.com/VLprojects/libmediasoupclient) 
+* [libmediasoupclient (version 3.4.1 patched fork)](https://github.com/VLprojects/libmediasoupclient)
 
 ## Roadmap
 

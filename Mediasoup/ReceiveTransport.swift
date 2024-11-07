@@ -1,5 +1,5 @@
 import Foundation
-import WebRTC
+import LiveKitWebRTC
 import Mediasoup_Private
 
 
