@@ -216,7 +216,7 @@ target_os = ["ios"]'
 function resetWebRTC() {
 	cd $WORK_DIR/webrtc/src
 	git reset --hard
-	
+
 	cd $WORK_DIR/webrtc/src/third_party
 	git reset --hard
 }
@@ -343,48 +343,28 @@ function rebuildLMSC() {
 	# Build mediasoup-client-ios
 	cmake . -B $BUILD_DIR/libmediasoupclient/device/arm64 \
 		${lmsc_cmake_args} \
-		-DLIBWEBRTC_BINARY_PATH=$BUILD_DIR/WebRTC/device/arm64/WebRTC.framework/WebRTC \
-		-DIOS_SDK=iphone \
+		-DLIBWEBRTC_BINARY_PATH=/Users/dean/Downloads/LiveKitWebRTC.xcframework/tvos-arm64/LiveKitWebRTC.framework/LiveKitWebRTC \
+		-DIOS_SDK=appletv \
 		-DIOS_ARCHS="arm64" \
 		-DPLATFORM=OS64 \
-		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
+		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS.sdk"
 	make -C $BUILD_DIR/libmediasoupclient/device/arm64
-
-	cmake . -B $BUILD_DIR/libmediasoupclient/simulator/x64 \
-		${lmsc_cmake_args} \
-		-DLIBWEBRTC_BINARY_PATH=$BUILD_DIR/WebRTC/simulator/x64/WebRTC.framework/WebRTC \
-		-DIOS_SDK=iphonesimulator \
-		-DIOS_ARCHS="x86_64" \
-		-DPLATFORM=SIMULATOR64 \
-		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
-	make -C $BUILD_DIR/libmediasoupclient/simulator/x64
-
-	cmake . -B $BUILD_DIR/libmediasoupclient/simulator/arm64 \
-		${lmsc_cmake_args} \
-		-DLIBWEBRTC_BINARY_PATH=$BUILD_DIR/WebRTC/simulator/arm64/WebRTC.framework/WebRTC \
-		-DIOS_SDK=iphonesimulator \
-		-DIOS_ARCHS="arm64"\
-		-DPLATFORM=SIMULATORARM64 \
-		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
-	make -C $BUILD_DIR/libmediasoupclient/simulator/arm64
 
 	# Create a FAT libmediasoup / libsdptransform library
 	mkdir -p $BUILD_DIR/libmediasoupclient/simulator/fat
-	lipo -create \
-		$BUILD_DIR/libmediasoupclient/simulator/x64/libmediasoupclient/libmediasoupclient.a \
-		$BUILD_DIR/libmediasoupclient/simulator/arm64/libmediasoupclient/libmediasoupclient.a \
-		-output $BUILD_DIR/libmediasoupclient/simulator/fat/libmediasoupclient.a
-	lipo -create \
-		$BUILD_DIR/libmediasoupclient/simulator/x64/_deps/libsdptransform-build/libsdptransform.a \
-		$BUILD_DIR/libmediasoupclient/simulator/arm64/_deps/libsdptransform-build/libsdptransform.a \
-		-output $BUILD_DIR/libmediasoupclient/simulator/fat/libsdptransform.a
+	# lipo -create \
+	# 	$BUILD_DIR/libmediasoupclient/simulator/x64/libmediasoupclient/libmediasoupclient.a \
+	# 	$BUILD_DIR/libmediasoupclient/simulator/arm64/libmediasoupclient/libmediasoupclient.a \
+	# 	-output $BUILD_DIR/libmediasoupclient/simulator/fat/libmediasoupclient.a
+	# lipo -create \
+	# 	$BUILD_DIR/libmediasoupclient/simulator/x64/_deps/libsdptransform-build/libsdptransform.a \
+	# 	$BUILD_DIR/libmediasoupclient/simulator/arm64/_deps/libsdptransform-build/libsdptransform.a \
+	# 	-output $BUILD_DIR/libmediasoupclient/simulator/fat/libsdptransform.a
 	xcodebuild -create-xcframework \
 		-library $BUILD_DIR/libmediasoupclient/device/arm64/libmediasoupclient/libmediasoupclient.a \
-		-library $BUILD_DIR/libmediasoupclient/simulator/fat/libmediasoupclient.a \
 		-output $OUTPUT_DIR/mediasoupclient.xcframework
 	xcodebuild -create-xcframework \
 		-library $BUILD_DIR/libmediasoupclient/device/arm64/_deps/libsdptransform-build/libsdptransform.a \
-		-library $BUILD_DIR/libmediasoupclient/simulator/fat/libsdptransform.a \
 		-output $OUTPUT_DIR/sdptransform.xcframework
 }
 
