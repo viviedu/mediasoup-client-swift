@@ -2,15 +2,16 @@
 import PackageDescription
 
 
-let version = "0.8.1"
-let mediasoupChecksum = "d791d60fce826b7efd041c33b8576f0ccefb87c2f31fb216431b7ac294503a0e"
-let webrtcChecksum = "6fd8501746d1de14cc2b2aa86d1ea4e081d8ad50ad190c99fb12fdbfdf3257bf"
+let version = "0.8.2"
+let mediasoupChecksum = "ae0e8fb0a64259c93e7ae5f8554461ab3b81f88bf4807572ae3a074620ed3b04"
+let webrtcChecksum = "923166a9b508af0529bd1d6d797ff5fa1fe3618d2f2444016422722ec2c780e9"
 
 
 let package = Package(
 	name: "Mediasoup-Client-Swift",
 	platforms: [
-		.iOS(.v14)
+		.iOS(.v14),
+		.tvOS(.v14)
 	],
 	products: [
 		.library(

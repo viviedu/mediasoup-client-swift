@@ -6,10 +6,9 @@ Pod::Spec.new do |spec|
 	spec.author = {
 		"Alexander Gorbunov" => "gorbunov.a@vlprojects.pro"
 	}
-	
+
 	spec.name = "Mediasoup-Client-Swift"
-	spec.version = "0.8.1"
-	spec.platform = :ios, "14.0"
+	spec.version = "0.8.2"
 	spec.module_name = "Mediasoup"
 	spec.module_map = "Mediasoup/Mediasoup.modulemap"
 

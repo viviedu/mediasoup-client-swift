@@ -83,7 +83,10 @@ function refetchLibmediasoupclient() {
 	echo 'Cloning libmediasoupclient'
 	cd $WORK_DIR
 	rm -rf libmediasoupclient
-	git clone -b vl-m120 --depth 1 https://github.com/VLprojects/libmediasoupclient.git
+	git clone -b vivi --depth 1 https://github.com/viviedu/libmediasoupclient
+	pushd libmediasoupclient
+	git checkout 20362efa1272567c90b95d4ff4463cb49612a0ee
+	popd
 }
 
 if [ -d $WORK_DIR/libmediasoupclient ]
@@ -181,15 +184,17 @@ function refetchWebRTC() {
 	gclient config --spec \
 'solutions = [{
 	"name": "src",
-	"url": "https://webrtc.googlesource.com/src.git",
+	"url": "https://github.com/viviedu/webrtc-tvos-mediasoup.git",
 	"deps_file": "DEPS",
 	"managed": False,
-	"custom_deps": {},
+	"custom_deps": {
+		"src/build": "https://github.com/viviedu/webrtc-build@a92699a7fbb6faa28b942cd200b9eec87422391c",
+	},
 }]
 target_os = ["ios"]'
 
 	# Fetch WebRTC m120 version.
-	gclient sync --no-history --revision src@branch-heads/6099
+	gclient sync --no-history --revision src@0ee7fe7de6bb5f20611016239a2bb188bdcd275d
 
 	# Fetch all possible WebRTC versions so you can switch between them.
 	# Takes longer time and more disk space.
@@ -216,7 +221,7 @@ target_os = ["ios"]'
 function resetWebRTC() {
 	cd $WORK_DIR/webrtc/src
 	git reset --hard
-	
+
 	cd $WORK_DIR/webrtc/src/third_party
 	git reset --hard
 }
@@ -263,9 +268,11 @@ cd $WEBRTC_DIR
 # It contains all available configuration flags with comprehensive comments for each.
 gn_arguments=(
 	'target_os="ios"'
+	# TODO change to 18.0?
 	'ios_deployment_target="14.0"'
 	'ios_enable_code_signing=false'
 	'is_component_build=false'
+	'target_environment="appletv"'
 	#'is_debug=true'
 	'is_debug=false'
 	'rtc_libvpx_build_vp9=true'
@@ -288,6 +295,8 @@ for str in ${gn_arguments[@]}; do
 done
 platform_args='target_environment="device" target_cpu="arm64"'
 gn gen $BUILD_DIR/WebRTC/device/arm64 --ide=xcode --args="${platform_args}${gn_args}"
+platform_args='target_environment="appletvos" target_cpu="arm64"'
+gn gen $BUILD_DIR/WebRTC/appletvos/arm64 --ide=xcode --args="${platform_args}${gn_args}"
 platform_args='target_environment="simulator" target_cpu="x64"'
 gn gen $BUILD_DIR/WebRTC/simulator/x64 --ide=xcode --args="${platform_args}${gn_args}"
 platform_args='target_environment="simulator" target_cpu="arm64"'
@@ -299,7 +308,8 @@ gn gen $BUILD_DIR/WebRTC/simulator/arm64 --ide=xcode --args="${platform_args}${g
 
 cd $BUILD_DIR/WebRTC
 ninja -C device/arm64 sdk
-ninja -C simulator/x64 sdk
+ninja -C appletvos/arm64 sdk
+# ninja -C simulator/x64 sdk
 ninja -C simulator/arm64 sdk
 
 cd $BUILD_DIR/WebRTC
@@ -308,14 +318,12 @@ cp -R simulator/arm64/WebRTC.framework simulator/WebRTC.framework
 rm simulator/WebRTC.framework/WebRTC
 lipo -create \
 	simulator/arm64/WebRTC.framework/WebRTC \
-	simulator/x64/WebRTC.framework/WebRTC \
 	-output simulator/WebRTC.framework/WebRTC
 
 cd $BUILD_DIR/WebRTC
 rm -rf $OUTPUT_DIR/WebRTC.xcframework
 xcodebuild -create-xcframework \
-	-framework device/arm64/WebRTC.framework \
-	-framework simulator/WebRTC.framework \
+	-framework appletvos/arm64/WebRTC.framework \
 	-output $OUTPUT_DIR/WebRTC.xcframework
 
 cd $WORK_DIR
@@ -350,6 +358,15 @@ function rebuildLMSC() {
 		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
 	make -C $BUILD_DIR/libmediasoupclient/device/arm64
 
+	cmake . -B $BUILD_DIR/libmediasoupclient/appletvos/arm64 \
+		${lmsc_cmake_args} \
+		-DLIBWEBRTC_BINARY_PATH=$BUILD_DIR/WebRTC/appletvos/arm64/WebRTC.framework/WebRTC \
+		-DIOS_SDK=appletv \
+		-DIOS_ARCHS="arm64" \
+		-DPLATFORM=OS64 \
+		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS.sdk"
+	make -C $BUILD_DIR/libmediasoupclient/appletvos/arm64
+
 	cmake . -B $BUILD_DIR/libmediasoupclient/simulator/x64 \
 		${lmsc_cmake_args} \
 		-DLIBWEBRTC_BINARY_PATH=$BUILD_DIR/WebRTC/simulator/x64/WebRTC.framework/WebRTC \
@@ -381,10 +398,12 @@ function rebuildLMSC() {
 	xcodebuild -create-xcframework \
 		-library $BUILD_DIR/libmediasoupclient/device/arm64/libmediasoupclient/libmediasoupclient.a \
 		-library $BUILD_DIR/libmediasoupclient/simulator/fat/libmediasoupclient.a \
+		-library $BUILD_DIR/libmediasoupclient/appletvos/arm64/libmediasoupclient/libmediasoupclient.a \
 		-output $OUTPUT_DIR/mediasoupclient.xcframework
 	xcodebuild -create-xcframework \
 		-library $BUILD_DIR/libmediasoupclient/device/arm64/_deps/libsdptransform-build/libsdptransform.a \
 		-library $BUILD_DIR/libmediasoupclient/simulator/fat/libsdptransform.a \
+		-library $BUILD_DIR/libmediasoupclient/appletvos/arm64/_deps/libsdptransform-build/libsdptransform.a \
 		-output $OUTPUT_DIR/sdptransform.xcframework
 }
 
