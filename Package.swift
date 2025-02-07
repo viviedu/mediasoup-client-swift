@@ -2,15 +2,16 @@
 import PackageDescription
 
 
-let version = "0.8.1"
-let mediasoupChecksum = "d791d60fce826b7efd041c33b8576f0ccefb87c2f31fb216431b7ac294503a0e"
-let webrtcChecksum = "6fd8501746d1de14cc2b2aa86d1ea4e081d8ad50ad190c99fb12fdbfdf3257bf"
+let version = "0.8.6"
+let mediasoupChecksum = "39756f27fc50d1a8982586dee75e3acadab548aa2151518712ee863ce04579ec"
+let webrtcChecksum = "2f43fbc999d369ea1ab89a2d1a9cdfb67e94b4ab61978b2b5a1f55ca76bb32a4"
 
 
 let package = Package(
 	name: "Mediasoup-Client-Swift",
 	platforms: [
-		.iOS(.v14)
+		.iOS(.v17),
+		.tvOS(.v17)
 	],
 	products: [
 		.library(
@@ -26,12 +27,12 @@ let package = Package(
 	targets: [
 		.binaryTarget(
 			name: "Mediasoup",
-			url: "https://github.com/VLprojects/mediasoup-client-swift/releases/download/\(version)/Mediasoup.xcframework.zip",
+			url: "https://github.com/viviedu/mediasoup-client-swift/releases/download/\(version)/Mediasoup.xcframework.zip",
 			checksum: mediasoupChecksum
 		),
 		.binaryTarget(
 			name: "WebRTC",
-			url: "https://github.com/VLprojects/mediasoup-client-swift/releases/download/\(version)/WebRTC.xcframework.zip",
+			url: "https://github.com/viviedu/mediasoup-client-swift/releases/download/\(version)/WebRTC.xcframework.zip",
 			checksum: webrtcChecksum
 		)
 	]
