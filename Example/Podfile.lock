@@ -1,5 +1,5 @@
 PODS:
-  - Mediasoup-Client-Swift (0.8.7)
+  - Mediasoup-Client-Swift (0.8.8)
 
 DEPENDENCIES:
   - Mediasoup-Client-Swift (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Mediasoup-Client-Swift: e62858447f06659d878685ee59f5e61d107773b0
+  Mediasoup-Client-Swift: b0c8e1005831c51a864224c797a03db4d11d8d22
 
 PODFILE CHECKSUM: d4fe3294dd9c7fc46519b6a7b26527f1f545e8d3
 
