@@ -169,6 +169,7 @@ function patchWebRTC() {
 	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/video_decoder_factory_h.patch
 	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/video_encoder_factory_h.patch
 	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/pc_BUILD.patch
+	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/nasm_assemble.patch
 }
 
 # WebRTC sources are downloaded by git client from Depot tools.
@@ -303,9 +304,8 @@ gn gen $BUILD_DIR/WebRTC/simulator/x64 --ide=xcode --args="${platform_args}${gn_
 platform_args='target_environment="simulator" target_cpu="arm64"'
 gn gen $BUILD_DIR/WebRTC/simulator/arm64 --ide=xcode --args="${platform_args}${gn_args}"
 # tvOS Simulator
-# FIXME x64 build fails at the ninja step below
-# platform_args='target_environment="appletvsimulator" target_cpu="x64"'
-# gn gen $BUILD_DIR/WebRTC/appletvsimulator/x64 --ide=xcode --args="${platform_args}${gn_args}"
+platform_args='target_environment="appletvsimulator" target_cpu="x64"'
+gn gen $BUILD_DIR/WebRTC/appletvsimulator/x64 --ide=xcode --args="${platform_args}${gn_args}"
 platform_args='target_environment="appletvsimulator" target_cpu="arm64"'
 gn gen $BUILD_DIR/WebRTC/appletvsimulator/arm64 --ide=xcode --args="${platform_args}${gn_args}"
 
@@ -318,7 +318,7 @@ ninja -C device/arm64 sdk
 ninja -C appletv/arm64 sdk
 ninja -C simulator/x64 sdk
 ninja -C simulator/arm64 sdk
-# ninja -C appletvsimulator/x64 sdk
+ninja -C appletvsimulator/x64 sdk
 ninja -C appletvsimulator/arm64 sdk
 
 cd $BUILD_DIR/WebRTC
@@ -332,12 +332,9 @@ lipo -create \
 rm -rf appletvsimulator/WebRTC.framework
 cp -R appletvsimulator/arm64/WebRTC.framework appletvsimulator/WebRTC.framework
 rm appletvsimulator/WebRTC.framework/WebRTC
-# lipo -create \
-# 	appletvsimulator/arm64/WebRTC.framework/WebRTC \
-# 	appletvsimulator/x64/WebRTC.framework/WebRTC \
-# 	-output appletvsimulator/WebRTC.framework/WebRTC
 lipo -create \
 	appletvsimulator/arm64/WebRTC.framework/WebRTC \
+	appletvsimulator/x64/WebRTC.framework/WebRTC \
 	-output appletvsimulator/WebRTC.framework/WebRTC
 
 cd $BUILD_DIR/WebRTC
@@ -408,14 +405,14 @@ function rebuildLMSC() {
 		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
 	make -C $BUILD_DIR/libmediasoupclient/simulator/arm64
 
-	# cmake . -B $BUILD_DIR/libmediasoupclient/appletvsimulator/x64 \
-	# 	${lmsc_cmake_args} \
-	# 	-DLIBWEBRTC_BINARY_PATH=$BUILD_DIR/WebRTC/appletvsimulator/x64/WebRTC.framework/WebRTC \
-	# 	-DIOS_SDK=appletvsimulator \
-	# 	-DIOS_ARCHS="x86_64" \
-	# 	-DPLATFORM=SIMULATOR64 \
-	# 	-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator.sdk"
-	# make -C $BUILD_DIR/libmediasoupclient/appletvsimulator/x64
+	cmake . -B $BUILD_DIR/libmediasoupclient/appletvsimulator/x64 \
+		${lmsc_cmake_args} \
+		-DLIBWEBRTC_BINARY_PATH=$BUILD_DIR/WebRTC/appletvsimulator/x64/WebRTC.framework/WebRTC \
+		-DIOS_SDK=appletvsimulator \
+		-DIOS_ARCHS="x86_64" \
+		-DPLATFORM=SIMULATOR64 \
+		-DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator.sdk"
+	make -C $BUILD_DIR/libmediasoupclient/appletvsimulator/x64
 
 	cmake . -B $BUILD_DIR/libmediasoupclient/appletvsimulator/arm64 \
 		${lmsc_cmake_args} \
@@ -437,18 +434,12 @@ function rebuildLMSC() {
 		$BUILD_DIR/libmediasoupclient/simulator/x64/_deps/libsdptransform-build/libsdptransform.a \
 		$BUILD_DIR/libmediasoupclient/simulator/arm64/_deps/libsdptransform-build/libsdptransform.a \
 		-output $BUILD_DIR/libmediasoupclient/simulator/fat/libsdptransform.a
-	# lipo -create \
-	# 	$BUILD_DIR/libmediasoupclient/appletvsimulator/x64/libmediasoupclient/libmediasoupclient.a \
-	# 	$BUILD_DIR/libmediasoupclient/appletvsimulator/arm64/libmediasoupclient/libmediasoupclient.a \
-	# 	-output $BUILD_DIR/libmediasoupclient/appletvsimulator/fat/libmediasoupclient.a
 	lipo -create \
+		$BUILD_DIR/libmediasoupclient/appletvsimulator/x64/libmediasoupclient/libmediasoupclient.a \
 		$BUILD_DIR/libmediasoupclient/appletvsimulator/arm64/libmediasoupclient/libmediasoupclient.a \
 		-output $BUILD_DIR/libmediasoupclient/appletvsimulator/fat/libmediasoupclient.a
-	# lipo -create \
-	# 	$BUILD_DIR/libmediasoupclient/appletvsimulator/x64/_deps/libsdptransform-build/libsdptransform.a \
-	# 	$BUILD_DIR/libmediasoupclient/appletvsimulator/arm64/_deps/libsdptransform-build/libsdptransform.a \
-	# 	-output $BUILD_DIR/libmediasoupclient/appletvsimulator/fat/libsdptransform.a
 	lipo -create \
+		$BUILD_DIR/libmediasoupclient/appletvsimulator/x64/_deps/libsdptransform-build/libsdptransform.a \
 		$BUILD_DIR/libmediasoupclient/appletvsimulator/arm64/_deps/libsdptransform-build/libsdptransform.a \
 		-output $BUILD_DIR/libmediasoupclient/appletvsimulator/fat/libsdptransform.a
 	xcodebuild -create-xcframework \
