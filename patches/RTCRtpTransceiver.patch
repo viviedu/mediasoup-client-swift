@@ -1,0 +1,24 @@
+--- webrtc/src/sdk/objc/api/peerconnection/RTCRtpTransceiver.h
++++ webrtc/src/sdk/objc/api/peerconnection/RTCRtpTransceiver.h
+@@ -136,6 +136,8 @@ RTC_OBJC_EXPORT
+  */
+ - (void)setDirection:(RTCRtpTransceiverDirection)direction error:(NSError **)error;
+
++- (void)setJitterBufferMinimumDelay:(double)seconds;
++
+ @end
+
+ RTC_OBJC_EXPORT
+--- webrtc/src/sdk/objc/api/peerconnection/RTCRtpTransceiver.mm
++++ webrtc/src/sdk/objc/api/peerconnection/RTCRtpTransceiver.mm
+@@ -132,6 +132,10 @@ NSString *const kRTCRtpTransceiverErrorDomain = @"org.webrtc.RTCRtpTranceiver";
+   _nativeRtpTransceiver->SetCodecPreferences(codecCapabilities);
+ }
+
++- (void)setJitterBufferMinimumDelay:(double)seconds {
++	_nativeRtpTransceiver->receiver()->SetJitterBufferMinimumDelay(seconds);
++}
++
+ - (NSString *)description {
+   return [NSString
+       stringWithFormat:@"RTC_OBJC_TYPE(RTCRtpTransceiver) {\n  sender: %@\n  receiver: %@\n}",

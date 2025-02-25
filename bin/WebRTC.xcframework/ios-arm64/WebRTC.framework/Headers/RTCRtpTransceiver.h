@@ -136,6 +136,8 @@ RTC_OBJC_EXPORT
  */
 - (void)setDirection:(RTCRtpTransceiverDirection)direction error:(NSError **)error;
 
+- (void)setJitterBufferMinimumDelay:(double)seconds;
+
 @end
 
 RTC_OBJC_EXPORT

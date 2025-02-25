@@ -170,6 +170,7 @@ function patchWebRTC() {
 	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/video_encoder_factory_h.patch
 	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/pc_BUILD.patch
 	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/nasm_assemble.patch
+	patch -b -p0 -d $WORK_DIR < $PATCHES_DIR/RTCRtpTransceiver.patch
 }
 
 # WebRTC sources are downloaded by git client from Depot tools.
